@@ -42,26 +42,17 @@ export default defineConfig(({ mode }) => {
         },
 
         /**
-         * Example Proxy
+         * pisa-api Proxy
          *
          * This is the configuration for localhost/127.0.0.1.
-         * For Cloudflare Pages see `/functions/example-proxy/[[catchall]].ts`.
+         * For Cloudflare Pages see `/functions/pisa-api/[[catchall]].ts`.
          * Please also adjust `const RELOAD_SUBPATHS` in `NotFoundErrorPage.tsx`.
          *
-         * Example usage: `Scrivito.unstable_JrRestApi.fetch('../example-proxy/some.json')`
+         * Example usage: `Scrivito.unstable_JrRestApi.fetch('../pisa-api/some.json')`
          */
-        '/example-proxy': {
-          target: 'https://myservice.example.com/api',
-          rewrite: (path) => {
-            // TODO: 🛑🚧🛑 Remove the following Error, once target and
-            // the `/example-proxy` prefix are adjusted to your needs.
-            throw new Error(
-              'Incomplete example-proxy configuration! See `vite.config.ts` for details.',
-            )
-
-            return path.replace(/^\/example-proxy/, '')
-          },
-
+        '/pisa-api': {
+          target: 'https://web092.crm.pisasales.de/hackathon',
+          rewrite: (path) => path.replace(/^\/pisa-api/, ''),
           changeOrigin: true,
         },
       },
