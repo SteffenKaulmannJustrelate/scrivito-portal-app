@@ -1,6 +1,5 @@
-import { load } from 'scrivito'
+import { DataItem, isUserLoggedIn, load } from 'scrivito'
 import { ProductInstance } from '../../Objs/Product/ProductObjClass'
-import type { DataItem } from '../../utils/additionalTypes'
 import { CartItem } from './CartItemDataClass'
 
 export function addToCart(product: ProductInstance): void {
@@ -18,10 +17,12 @@ export async function removeFromCart(product: ProductInstance): Promise<void> {
     CartItem.all().transform({ filters: { productId } }).take(),
   )
 
-  items.forEach((item) => item.destroy())
+  items.forEach((item) => item.delete())
 }
 
 export function isInCart(product: ProductInstance): boolean {
+  if (!isUserLoggedIn()) return false // TODO: remove, once CartItem itself requires a login
+
   const productId = product.id()
 
   // @ts-expect-error until out of private beta
@@ -29,6 +30,8 @@ export function isInCart(product: ProductInstance): boolean {
 }
 
 export function containsItems(): boolean {
+  if (!isUserLoggedIn()) return false // TODO: remove, once CartItem itself requires a login
+
   // @ts-expect-error until out of private beta
   return CartItem.all().containsData()
 }
@@ -43,6 +46,6 @@ export async function checkoutCart(): Promise<void> {
   // push checkedOutItems to your favorite backend
   console.log('Checked out', checkedOutItems)
 
-  const destroyPromises = cartItems.map((item) => item.destroy())
-  await Promise.all(destroyPromises)
+  const deletePromises = cartItems.map((item) => item.delete())
+  await Promise.all(deletePromises)
 }
